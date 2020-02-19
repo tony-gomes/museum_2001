@@ -1,9 +1,10 @@
 class Museum
-  attr_reader :name, :exhibits
+  attr_reader :name, :exhibits, :patrons
 
   def initialize(name)
     @name = name
     @exhibits = []
+    @patrons = []
   end
 
   def add_exhibit(exhibit)
@@ -17,5 +18,21 @@ class Museum
       recommendation.unshift(exhibit) if patron.interests.any?(exhibit.name)
     end
     recommendation
+  end
+
+  def admit(patron)
+    @patrons << patron
+  end
+
+  def patrons_by_exhibit_interest
+    interested_patrons = {}
+
+    exhibits.each { |exhibit| interested_patrons[exhibit] = [] }
+
+    patrons.each do |patron|
+      interests = recommend_exhibits(patron)
+      interests.each {|exhibit| interested_patrons[exhibit] << patron}
+    end
+    interested_patrons
   end
 end
